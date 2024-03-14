@@ -1,24 +1,63 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { useMachine } from "@xstate/react";
+import { todoMachine } from "./xState/myFirstMachine";
 
 function App() {
+  const [state, send] = useMachine(todoMachine);
+  const handleAddTodo = (text: string) => {
+    send({ type: "ADD", text });
+  };
+
+  const handleToggleTodo = (id: number) => {
+    send({ type: "TOGGLE", id });
+  };
+
+  const handleRemoveTodo = (id: number) => {
+    send({ type: "REMOVE", id });
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      <div>
+        <h2>Add Todo</h2>
+        <input
+          type="text"
+          placeholder="Add todo..."
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && (e.target as HTMLInputElement).value) {
+              handleAddTodo((e.target as HTMLInputElement).value);
+              (e.target as HTMLInputElement).value = "";
+            }
+          }}
+        />
+        <h2>Todos List</h2>
+        {state.context.todos.length > 0 ? (
+          <ul>
+            {state.context.todos.map((todo) => (
+              <li key={todo.id}>
+                <div className="todo-item">
+                  <div
+                    onClick={() => handleToggleTodo(todo.id)}
+                    style={{
+                      textDecoration: todo.completed ? "line-through" : "none",
+                      cursor: "pointer",
+                    }}
+                  >
+                    {todo.text}
+                  </div>
+                  {todo.completed && (
+                    <button onClick={() => handleRemoveTodo(todo.id)}>
+                      Remove
+                    </button>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>Yay! No todos! Enjoy your free time!</p>
+        )}
+      </div>
     </div>
   );
 }
