@@ -1,5 +1,5 @@
 import React, { Fragment, lazy, Suspense } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
 export interface IProps {
   children: JSX.Element;

@@ -9,6 +9,8 @@ const FormikErrorMessage = ({
   errorClassName?: string;
 }) => {
   const [field, meta] = useField<string>(name);
+  console.log(field);
+
   return (
     <>
       {meta.error && meta.touched && (
