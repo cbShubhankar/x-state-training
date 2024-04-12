@@ -25,27 +25,27 @@ jobs:
       - name: Update Version and Commit Changes
         run: |
           version_code=$(grep "versionCode" android/app/build.gradle | sed -E 's/.*([0-9]+).*/\1/')
-          version_name=$(grep "versionName" android/app/build.gradle | sed -E 's/.*"(.*)"/\1/')
+          version_name=$(grep "versionName" android/app/build.gradle | sed -E 's/.*"([0-9]+).*/\1/')
 
-          # Increment version code if version name is 10
-          if [ "$version_name" = "10" ]; then
-              version_code=$((version_code + 1))
-              version_name="0"
-          else
-              # Increment version name
-              version_name=$((version_name + 1))
-          fi
+           # Increment version code if version name is 10
+           if [ "$version_name" = "10" ]; then
+               version_code=$((version_code + 1))
+               version_name="0"
+           else
+               # Increment version name
+               version_name=$((version_name + 1))
+           fi
 
-          # Update version code and name in build.gradle
-          sed -i "s/versionCode [0-9]*/versionCode $version_code/" android/app/build.gradle
-          sed -i "s/versionName \"$version_name\"/versionName \"$version_name\"/" android/app/build.gradle
-          echo "Updated version code: $version_code, version name: $version_name"
-          # Commit changes
-          git config --global user.email "github-actions@github.com"
-          git config --global user.name "GitHub Actions"
-          git add android/app/build.gradle
-          git commit -m "Increment version code and name"
-          git push
+           # Update version code and name in build.gradle
+           sed -i "s/versionCode [0-9]*/versionCode $version_code/" android/app/build.gradle
+           sed -i "s/versionName \"$version_name\"/versionName \"$version_name\"/" android/app/build.gradle
+           echo "Updated version code: $version_code, version name: $version_name"
+           # Commit changes
+           git config --global user.email "github-actions@github.com"
+           git config --global user.name "GitHub Actions"
+           git add android/app/build.gradle
+           git commit -m "Increment version code and name"
+           git push
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
