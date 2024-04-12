@@ -25,7 +25,9 @@ jobs:
       - name: Update Apk Version
         run: |
           version_code=$(($(grep "versionCode" android/app/build.gradle | sed -E 's/.*([0-9]+).*/\1/') + 1))
+          echo "New version code: $version_code"
           sed -i "s/versionCode [0-9]*/versionCode $version_code/" android/app/build.gradle
+          echo "New version code111: $version_code"
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
