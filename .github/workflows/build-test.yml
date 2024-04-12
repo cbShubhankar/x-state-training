@@ -51,4 +51,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: app-bundle
-          path: ./android/app/build/outputs/bundle/debug/*.abb
+          path: ./android/app/build/outputs/bundle/debug/*.aab
