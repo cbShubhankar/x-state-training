@@ -44,3 +44,11 @@ jobs:
         with:
           name: app-debug
           path: ./android/app/build/outputs/apk/debug/*.apk
+      - name: Build apk bundle
+        run: |
+          cd android &&./gradlew bundleDebug
+      - name: Upload apk bundle
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-bundle
+          path: ./android/app/build/outputs/bundle/debug/*.abb
