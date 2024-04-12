@@ -32,7 +32,8 @@ jobs:
           yarn run run-android
 
       - name: Build APK
-        run: ./gradlew build
+        run: |
+          cd android && ./gradlew build
 
       - name: Upload APK
         uses: actions/upload-artifact@v3
