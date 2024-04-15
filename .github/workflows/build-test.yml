@@ -27,6 +27,44 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Extract existing version code
+        run: |
+          # Extract version number from branch name
+          version_name=${GITHUB_REF#refs/heads/bump/v}
+
+          # Get existing version code from build.gradle
+          version_code=$(grep "versionCode" android/app/build.gradle | awk '{print $2}' | tr -d '\n')
+
+          # Increment existing version code by 1
+          version_code=$((version_code + 1))
+
+          # Set environment variable for later use
+          echo "VERSION_NAME=$version_name" >> $GITHUB_ENV
+          echo "VERSION_CODE=$version_code" >> $GITHUB_ENV
+          echo "version name=$version_name and version code=$version_code"
+
+      - name: Increase version code and change version name
+        run: |
+          # Update build.gradle with new version code and name
+          echo "${{ vars.VERSION_CODE }} - ${{ vars.version_name }}"
+          sed -i "s/versionCode [0-9]\+/versionCode ${{ vars.VERSION_CODE }}/g" android/app/build.gradle
+          sed -i "s/versionName \"[^\"]*\"/versionName \"${{ vars.VERSION_NAME }}\"/g" android/app/build.gradle
+
+      - name: Commit and push changes
+        run: |
+          git config user.email "github-actions@github.com"
+          git config user.name "Github Actions"
+          git commit -am "Bump version code and change version name"
+          git push origin HEAD
+
+      - name: Open pull request
+        uses: peter-evans/create-pull-request@v5.0.0
+        with:
+          commit-message: "Bumping to ${{ vars.VERSION_CODE }}"
+          branch: "${{ github.ref }}"
+          title: "${{ vars.VERSION_NAME }} - (${{ vars.VERSION_CODE }})"
+          body: "${{ vars.VERSION_NAME }} - (${{ vars.VERSION_CODE }})"
+          base: "master"
 
       - run: yarn install
 
@@ -42,7 +80,6 @@ jobs:
           RELEASE_KEY_PASSWORD: ${{ vars.RELEASE_KEY_PASSWORD }}
 
         run: |
-          echo "base64------>: $ENCODED_STRING"
           echo $ENCODED_STRING > keystore-b64.txt
           base64 -d keystore-b64.txt > keystore.jks
       - name: Build Release APK
