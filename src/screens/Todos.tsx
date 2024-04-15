@@ -19,7 +19,15 @@ function Todos() {
   return (
     <div className="app">
       <div>
-        <h2>Add Todo</h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2>Add Todo</h2>
+          <button
+            className="bg-red-600 px-2 py-1 rounded-lg hover:text-white"
+            onClick={() => window.open(process.env.REACT_APP_REDIRECT_URL)}
+          >
+            Redirect
+          </button>
+        </div>
         <input
           type="text"
           placeholder="Add todo..."
