@@ -58,7 +58,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: app-release
-          path: ./android/app/release/*.apk
+          path: ./android/app/build/outputs/apk/release/*.apk
       - name: Build Release apk bundle
         env:
           RELEASE_KEYSTORE_PASSWORD: ${{ vars.RELEASE_KEYSTORE_PASSWORD }}
@@ -71,4 +71,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: app-release
-          path: ./android/app/release/*.aab
+          path: ./android/app/build/outputs/bundle/release/*.aab
