@@ -42,6 +42,7 @@ jobs:
           RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
 
         run: |
+          echo "base64------>:" $ENCODED_STRING
           echo $ENCODED_STRING > keystore-b64.txt
           base64 -d keystore-b64.txt > keystore.jks
       - name: Build Release APK
