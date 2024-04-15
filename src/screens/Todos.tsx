@@ -15,6 +15,8 @@ function Todos() {
     send({ type: "REMOVE", id });
   };
 
+  console.log(process.env.REACT_APP_REDIRECT_URL);
+
   // add routes in this file?
   return (
     <div className="app">
