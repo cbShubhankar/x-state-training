@@ -30,7 +30,7 @@ jobs:
       - name: Extract existing version code
         run: |
           # Extract version number from branch name
-          version_name=${GITHUB_REF#refs/heads/bump/v}
+          version_name="1.0.1"
 
           # Get existing version code from build.gradle
           version_code=$(grep "versionCode" android/app/build.gradle | awk '{print $2}' | tr -d '\n')
@@ -55,7 +55,7 @@ jobs:
           git config user.email "github-actions@github.com"
           git config user.name "Github Actions"
           git commit -am "Bump version code and change version name"
-          git push origin HEAD
+          git push origin ${{ github.ref_name }}
 
       - name: Open pull request
         uses: peter-evans/create-pull-request@v5.0.0
@@ -64,7 +64,7 @@ jobs:
           branch: "${{ github.ref }}"
           title: "${{ vars.VERSION_NAME }} - (${{ vars.VERSION_CODE }})"
           body: "${{ vars.VERSION_NAME }} - (${{ vars.VERSION_CODE }})"
-          base: "master"
+          base: "main"
 
       - run: yarn install
 
