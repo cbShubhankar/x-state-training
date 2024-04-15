@@ -39,14 +39,22 @@ jobs:
           version_code=$((version_code + 1))
 
           # Set environment variable for later use
+          echo "Setting environment variables..."
+          echo "version_name: $version_name"
+          echo "version_code: $version_code"
+          echo "Setting VERSION_NAME=$version_name"
+          echo "Setting VERSION_CODE=$version_code"
           echo "VERSION_NAME=$version_name" >> $GITHUB_ENV
           echo "VERSION_CODE=$version_code" >> $GITHUB_ENV
+          echo "Environment variables set successfully!"
+          # echo "VERSION_NAME=$version_name" >> $GITHUB_ENV
+          # echo "VERSION_CODE=$version_code" >> $GITHUB_ENV
           echo "version name=$version_name and version code=$version_code"
 
       - name: Increase version code and change version name
         run: |
           # Update build.gradle with new version code and name
-          echo "${{ vars.VERSION_CODE }} - ${{ vars.version_name }}"
+          echo "${{ vars.VERSION_CODE }} - ${{ vars.VERSION_NAME }}"
           sed -i "s/versionCode [0-9]\+/versionCode ${{ vars.VERSION_CODE }}/g" android/app/build.gradle
           sed -i "s/versionName \"[^\"]*\"/versionName \"${{ vars.VERSION_NAME }}\"/g" android/app/build.gradle
 
