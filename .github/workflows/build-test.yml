@@ -30,26 +30,32 @@ jobs:
       - name: Extract existing version code
         run: |
           # Extract version number from branch name
-          version_name="1.0.1"
+          current_version=$(grep -oP 'versionName "\K([^"]*)' android/app/build.gradle)
 
           # Get existing version code from build.gradle
           version_code=$(grep "versionCode" android/app/build.gradle | awk '{print $2}' | tr -d '\n')
 
           # Increment existing version code by 1
           version_code=$((version_code + 1))
+
+          # Increment version number
+          major_version=$(echo "$current_version" | awk -F '.' '{print $1}')
+          minor_version=$(echo "$current_version" | awk -F '.' '{print $2}')
+
+          if [ "$minor_version" -eq "10" ]; then
+              new_version="$((major_version + 1)).0"
+          else
+              next_version=$((minor_version + 1))
+              new_version="$major_version.$next_version"
+          fi
+
           # Update build.gradle with new version code and name
           echo "$version_code - $version_name"
           sed -i "s/versionCode [0-9]\+/versionCode $version_code/g" android/app/build.gradle
-          sed -i "s/versionName \"[^\"]*\"/versionName \"$version_name\"/g" android/app/build.gradle
+          # Update version name in the project (adjust this command as per your project structure)
+          sed -i "s/versionName \"$current_version\"/versionName \"$new_version\"/" android/app/build.gradle
 
-          echo "version name=$version_name and version code=$version_code"
-
-      # - name: Increase version code and change version name
-      #   run: |
-      #     # Update build.gradle with new version code and name
-      #     echo "${{ vars.VERSION_CODE }} - ${{ vars.VERSION_NAME }}"
-      #     sed -i "s/versionCode [0-9]\+/versionCode ${{ vars.VERSION_CODE }}/g" android/app/build.gradle
-      #     sed -i "s/versionName \"[^\"]*\"/versionName \"${{ vars.VERSION_NAME }}\"/g" android/app/build.gradle
+          echo "version name=$new_version and version code=$version_code"
 
       - name: Commit and push changes
         run: |
@@ -57,15 +63,6 @@ jobs:
           git config user.name "Github Actions"
           git commit -am "Bump version code and change version name"
           git push origin ${{ github.ref_name }}
-
-      # - name: Open pull request
-      #   uses: peter-evans/create-pull-request@v5.0.0
-      #   with:
-      #     commit-message: "Bumping to ${{ vars.VERSION_CODE }}"
-      #     branch: "${{ github.ref }}"
-      #     title: "${{ vars.VERSION_NAME }} - (${{ vars.VERSION_CODE }})"
-      #     body: "${{ vars.VERSION_NAME }} - (${{ vars.VERSION_CODE }})"
-      #     base: "main"
 
       - run: yarn install
 
