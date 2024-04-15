@@ -70,5 +70,5 @@ jobs:
       - name: Upload apk bundle
         uses: actions/upload-artifact@v3
         with:
-          name: app-release
+          name: bundle-release
           path: ./android/app/build/outputs/bundle/release/*.aab
