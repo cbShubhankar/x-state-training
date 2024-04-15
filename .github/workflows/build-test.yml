@@ -51,7 +51,7 @@ jobs:
           RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
           REACT_APP_REDIRECT_URL: ${{ secrets.REACT_APP_REDIRECT_URL }}
         run: |
-          cd android && ./gradlew assembleRelease
+          cd android && ./gradlew assembleRelease --stacktrace
 
       - name: Upload APK
         uses: actions/upload-artifact@v3
@@ -65,7 +65,7 @@ jobs:
           RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
           REACT_APP_REDIRECT_URL: ${{ secrets.REACT_APP_REDIRECT_URL }}
         run: |
-          cd android &&./gradlew bundleRelease
+          cd android &&./gradlew bundleRelease --stacktrace
       - name: Upload apk bundle
         uses: actions/upload-artifact@v3
         with:
