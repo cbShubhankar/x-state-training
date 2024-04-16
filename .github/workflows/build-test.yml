@@ -113,4 +113,4 @@ jobs:
           path: ./android/app/build/outputs/bundle/release/*.aab
   new-tests:
     needs: build
-    uses: ./.github/workflows/build-apk.yml
+    uses: ./.github/workflows/build.yml
