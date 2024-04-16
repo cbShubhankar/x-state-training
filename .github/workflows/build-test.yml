@@ -3,8 +3,12 @@ name: Android Build
 on:
   push:
     branches:
-      - main # Change this to your main branch name
-
+      - main
+env:
+  RELEASE_KEYSTORE_PASSWORD: ${{ vars.RELEASE_KEYSTORE_PASSWORD }}
+  RELEASE_KEYSTORE_ALIAS: ${{ vars.RELEASE_KEYSTORE_ALIAS }}
+  RELEASE_KEY_PASSWORD: ${{ vars.RELEASE_KEY_PASSWORD }}
+  REACT_APP_REDIRECT_URL: ${{ vars.REACT_APP_REDIRECT_URL }}
 jobs:
   build:
     strategy:
@@ -73,19 +77,19 @@ jobs:
       - name: Decode Keystore
         env:
           ENCODED_STRING: ${{ vars.KEYSTORE_BASE_64 }}
-          RELEASE_KEYSTORE_PASSWORD: ${{ vars.RELEASE_KEYSTORE_PASSWORD }}
-          RELEASE_KEYSTORE_ALIAS: ${{ vars.RELEASE_KEYSTORE_ALIAS }}
-          RELEASE_KEY_PASSWORD: ${{ vars.RELEASE_KEY_PASSWORD }}
+          # RELEASE_KEYSTORE_PASSWORD: ${{ vars.RELEASE_KEYSTORE_PASSWORD }}
+          # RELEASE_KEYSTORE_ALIAS: ${{ vars.RELEASE_KEYSTORE_ALIAS }}
+          # RELEASE_KEY_PASSWORD: ${{ vars.RELEASE_KEY_PASSWORD }}
 
         run: |
           echo $ENCODED_STRING > keystore-b64.txt
           base64 -d keystore-b64.txt > keystore.jks
       - name: Build Release APK
-        env:
-          RELEASE_KEYSTORE_PASSWORD: ${{ vars.RELEASE_KEYSTORE_PASSWORD }}
-          RELEASE_KEYSTORE_ALIAS: ${{ vars.RELEASE_KEYSTORE_ALIAS }}
-          RELEASE_KEY_PASSWORD: ${{ vars.RELEASE_KEY_PASSWORD }}
-          REACT_APP_REDIRECT_URL: ${{ vars.REACT_APP_REDIRECT_URL }}
+        # env:
+        #   RELEASE_KEYSTORE_PASSWORD: ${{ vars.RELEASE_KEYSTORE_PASSWORD }}
+        #   RELEASE_KEYSTORE_ALIAS: ${{ vars.RELEASE_KEYSTORE_ALIAS }}
+        #   RELEASE_KEY_PASSWORD: ${{ vars.RELEASE_KEY_PASSWORD }}
+        #   REACT_APP_REDIRECT_URL: ${{ vars.REACT_APP_REDIRECT_URL }}
         run: |
           cd android && ./gradlew assembleRelease --stacktrace
 
@@ -95,11 +99,11 @@ jobs:
           name: app-release
           path: ./android/app/build/outputs/apk/release/*.apk
       - name: Build Release apk bundle
-        env:
-          RELEASE_KEYSTORE_PASSWORD: ${{ vars.RELEASE_KEYSTORE_PASSWORD }}
-          RELEASE_KEYSTORE_ALIAS: ${{ vars.RELEASE_KEYSTORE_ALIAS }}
-          RELEASE_KEY_PASSWORD: ${{ vars.RELEASE_KEY_PASSWORD }}
-          REACT_APP_REDIRECT_URL: ${{ vars.REACT_APP_REDIRECT_URL }}
+        # env:
+        #   RELEASE_KEYSTORE_PASSWORD: ${{ vars.RELEASE_KEYSTORE_PASSWORD }}
+        #   RELEASE_KEYSTORE_ALIAS: ${{ vars.RELEASE_KEYSTORE_ALIAS }}
+        #   RELEASE_KEY_PASSWORD: ${{ vars.RELEASE_KEY_PASSWORD }}
+        #   REACT_APP_REDIRECT_URL: ${{ vars.REACT_APP_REDIRECT_URL }}
         run: |
           cd android &&./gradlew bundleRelease --stacktrace
       - name: Upload apk bundle
