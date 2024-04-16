@@ -1,0 +1,14 @@
+name: Build test
+
+on:
+  workflow_call:
+  push:
+    branches:
+      - develop
+jobs:
+  build-test:
+    name: Android Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test1
+        run: echo "Testing..."

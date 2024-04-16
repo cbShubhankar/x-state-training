@@ -111,3 +111,6 @@ jobs:
         with:
           name: bundle-release
           path: ./android/app/build/outputs/bundle/release/*.aab
+  new-tests:
+    needs: build
+    uses: ./.github/workflows/build-apk.yml
