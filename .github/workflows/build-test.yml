@@ -33,8 +33,9 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Read JSON file
         run: |
-          json=$(public/manifest.json)
-          echo "$json"
+          ls
+          current_apk_version=$(grep -oP 'version"\K([^"]*)' public/meta.json)
+          echo "Current version is \`$current_apk_version\`"
       - name: Extract existing version code
         run: |
           # Extract version number from branch name
