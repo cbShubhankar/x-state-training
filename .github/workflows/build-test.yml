@@ -48,6 +48,7 @@ jobs:
           # Increment version number
           version_code=$(echo "$version_name" | awk -F '.' '{print $1}')
           echo "Major Version : $version_code"
+          echo "Current Version : $current_version_code"
 
           # Update build.gradle with new version code and name
           echo "$version_code - $version_name"
