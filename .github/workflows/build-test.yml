@@ -42,25 +42,10 @@ jobs:
           current_version=$(grep -oP 'versionName "\K([^"]*)' android/app/build.gradle)
           # Getting version code from meta.json file
           version_name=`cat ./public/meta.json | jq -r '.version'`
-          # version_name=$content
-
-          # Get existing version code from build.gradle
-          # version_code=$(grep "versionCode" android/app/build.gradle | awk '{print $2}' | tr -d '\n')
-
-          # Increment existing version code by 1
-          # version_code=$((version_code + 1))
 
           # Increment version number
           version_code=$(echo "$version_name" | awk -F '.' '{print $1}')
-          minor_version=$(echo "$version_name" | awk -F '.' '{print $2}')
           echo "Major Version : $version_code"
-          echo "Minor Version : $minor_version"
-          # if [ "$minor_version" -eq "10" ]; then
-          #     new_version="$((major_version + 1)).0"
-          # else
-          #     next_version=$((minor_version + 1))
-          #     new_version="$major_version.$next_version"
-          # fi
 
           # Update build.gradle with new version code and name
           echo "$version_code - $version_name"
