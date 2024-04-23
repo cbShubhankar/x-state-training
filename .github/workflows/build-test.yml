@@ -38,7 +38,7 @@ jobs:
           echo "Current version is \`$content\`"
       - name: Extract existing version code
         run: |
-          # Extract version number from branch name
+          # Getting old version code
           current_version=$(grep -oP 'versionName "\K([^"]*)' android/app/build.gradle)
           # Get existing version code from build.gradle
           current_version_code=$(grep "versionCode" android/app/build.gradle | awk '{print $2}' | tr -d '\n')
