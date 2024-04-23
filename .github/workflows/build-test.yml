@@ -31,6 +31,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Read JSON file
+        run: |
+          json=$(public/manifest.json)
+          echo "$json"
       - name: Extract existing version code
         run: |
           # Extract version number from branch name
