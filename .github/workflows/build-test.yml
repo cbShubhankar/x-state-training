@@ -38,19 +38,20 @@ jobs:
           echo "Current version is \`$content\`"
       - name: Extract existing version code
         run: |
-          # Extract version number from branch name
-          current_version=$(grep -oP 'versionName "\K([^"]*)' android/app/build.gradle)
+          # Getting version code from meta.json file
+          current_version=content=`cat ./public/meta.json`
 
           # Get existing version code from build.gradle
-          version_code=$(grep "versionCode" android/app/build.gradle | awk '{print $2}' | tr -d '\n')
+          # version_code=$(grep "versionCode" android/app/build.gradle | awk '{print $2}' | tr -d '\n')
 
           # Increment existing version code by 1
-          version_code=$((version_code + 1))
+          # version_code=$((version_code + 1))
 
           # Increment version number
           major_version=$(echo "$current_version" | awk -F '.' '{print $1}')
           minor_version=$(echo "$current_version" | awk -F '.' '{print $2}')
-
+          echo "Major Version : $major_version"
+          echo "Minor Version : $minor_version"
           if [ "$minor_version" -eq "10" ]; then
               new_version="$((major_version + 1)).0"
           else
@@ -60,11 +61,11 @@ jobs:
 
           # Update build.gradle with new version code and name
           echo "$version_code - $version_name"
-          sed -i "s/versionCode [0-9]\+/versionCode $version_code/g" android/app/build.gradle
+          sed -i "s/versionCode [0-9]\+/versionCode $major_version/g" android/app/build.gradle
           # Update version name in the project (adjust this command as per your project structure)
-          sed -i "s/versionName \"$current_version\"/versionName \"$new_version\"/" android/app/build.gradle
+          sed -i "s/versionName \"$current_version\"/versionName \"$current_version\"/" android/app/build.gradle
 
-          echo "version name=$new_version and version code=$version_code"
+          echo "version name=$current_version and version code=$major_version"
 
       - name: Commit and push changes
         run: |
