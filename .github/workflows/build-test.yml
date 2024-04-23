@@ -34,12 +34,12 @@ jobs:
       - name: Read JSON file
         run: |
           ls
-          content=`cat ./public/meta.json`
+          content=`cat ./public/meta.json | jq -r '.version'`
           echo "Current version is \`$content\`"
       - name: Extract existing version code
         run: |
           # Getting version code from meta.json file
-          content=`cat ./public/meta.json`
+          content=`cat ./public/meta.json | jq -r '.version'`
           current_version=$content.version
 
           # Get existing version code from build.gradle
