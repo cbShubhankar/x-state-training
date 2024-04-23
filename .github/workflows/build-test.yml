@@ -49,8 +49,9 @@ jobs:
           version_code=$(echo "$version_name" | cut -d '.' -f 1)
           echo "Version code: $version_code"
 
-          # Update build.gradle with new version code and name
-          sed -i "s/versionCode \"$current_version_code\"/versionCode \"$version_code\"/" android/app/build.gradle
+          # Update build.gradle with new version code
+          echo "Update build.gradle with new version code: $version_code"
+          sed -i "s/versionCode [0-9]\+/versionCode $version_code/g" android/app/build.gradle
           # Update version name in the project (adjust this command as per your project structure)
           sed -i "s/versionName \"$current_version\"/versionName \"$version_name\"/" android/app/build.gradle
 
