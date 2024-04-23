@@ -34,8 +34,8 @@ jobs:
       - name: Read JSON file
         run: |
           ls
-          current_apk_version=$(grep -oP 'version"\K([^"]*)' public/meta.json)
-          echo "Current version is \`$current_apk_version\`"
+          content=`cat ./public/meta.json`
+          echo "Current version is \`$content\`"
       - name: Extract existing version code
         run: |
           # Extract version number from branch name
