@@ -39,7 +39,8 @@ jobs:
       - name: Extract existing version code
         run: |
           # Getting version code from meta.json file
-          current_version=content=`cat ./public/meta.json`
+          content=`cat ./public/meta.json`
+          current_version=$content.version
 
           # Get existing version code from build.gradle
           # version_code=$(grep "versionCode" android/app/build.gradle | awk '{print $2}' | tr -d '\n')
