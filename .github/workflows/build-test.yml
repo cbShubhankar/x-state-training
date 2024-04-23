@@ -40,7 +40,7 @@ jobs:
         run: |
           # Getting version code from meta.json file
           content=`cat ./public/meta.json | jq -r '.version'`
-          current_version=$content.version
+          current_version=$content
 
           # Get existing version code from build.gradle
           # version_code=$(grep "versionCode" android/app/build.gradle | awk '{print $2}' | tr -d '\n')
