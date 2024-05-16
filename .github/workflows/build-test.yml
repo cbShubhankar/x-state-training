@@ -37,7 +37,7 @@ jobs:
           ls
           content=`cat ./public/meta.json | jq -r '.version'`
           echo "Current version is \`$content\`"
-          echo ${{^^github.ref_name}}
+          echo ${{^^(github.ref_name)}}
       - name: Extract existing version code
         run: |
           # Getting old version code
