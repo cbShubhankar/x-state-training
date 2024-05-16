@@ -4,11 +4,6 @@ on:
   push:
     branches:
       - main
-env:
-  RELEASE_KEYSTORE_PASSWORD: ${{ vars.RELEASE_KEYSTORE_PASSWORD }}
-  RELEASE_KEYSTORE_ALIAS: ${{ vars.RELEASE_KEYSTORE_ALIAS }}
-  RELEASE_KEY_PASSWORD: ${{ vars.RELEASE_KEY_PASSWORD }}
-  REACT_APP_REDIRECT_URL: ${{ vars.MAIN_REACT_APP_REDIRECT_URL }}
 
 jobs:
   build:
@@ -22,6 +17,11 @@ jobs:
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.head_ref }}
+        env:
+          RELEASE_KEYSTORE_PASSWORD: ${{ vars.RELEASE_KEYSTORE_PASSWORD }}
+          RELEASE_KEYSTORE_ALIAS: ${{ vars.RELEASE_KEYSTORE_ALIAS }}
+          RELEASE_KEY_PASSWORD: ${{ vars.RELEASE_KEY_PASSWORD }}
+          REACT_APP_REDIRECT_URL: ${{ vars.MAIN_REACT_APP_REDIRECT_URL }}
       - name: Setup java JDK
         uses: actions/setup-java@v3
         with:
@@ -37,10 +37,7 @@ jobs:
           ls
           content=`cat ./public/meta.json | jq -r '.version'`
           echo "Current version is \`$content\`"
-          UPPERCASE_BRANCH_NAME=$(echo "${{ github.ref_name }}" | tr '[:lower:]' '[:upper:]')
-          VAR_NAME="vars.${UPPERCASE_BRANCH_NAME}_REACT_APP_REDIRECT_URL"
-          REDIRECT_URL="${!VAR_NAME}"
-          echo "REACT_APP_REDIRECT_URL=${REDIRECT_URL}"
+          echo "${{ github.ref_name }}" | tr '[:lower:]' '[:upper:]'
       - name: Extract existing version code
         run: |
           # Getting old version code
