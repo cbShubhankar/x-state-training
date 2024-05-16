@@ -4,13 +4,11 @@ on:
   push:
     branches:
       - main
-
 env:
   RELEASE_KEYSTORE_PASSWORD: ${{ vars.RELEASE_KEYSTORE_PASSWORD }}
   RELEASE_KEYSTORE_ALIAS: ${{ vars.RELEASE_KEYSTORE_ALIAS }}
   RELEASE_KEY_PASSWORD: ${{ vars.RELEASE_KEY_PASSWORD }}
   REACT_APP_REDIRECT_URL: ${{ vars.REACT_APP_REDIRECT_URL }}
-
 jobs:
   build:
     strategy:
@@ -20,12 +18,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
         with:
           ref: ${{ github.head_ref }}
-
-      - name: Set up Java JDK
+      - name: Setup java JDK
         uses: actions/setup-java@v3
         with:
           java-version: "17"
@@ -35,29 +31,27 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-
       - name: Read JSON file
         run: |
           ls
-          content=$(cat ./public/meta.json | jq -r '.version')
+          content=`cat ./public/meta.json | jq -r '.version'`
           echo "Current version is \`$content\`"
-          echo ${{ github.head_ref }}
-
+          echo ${{github.head_ref}}
       - name: Extract existing version code
         run: |
-          # Get old version code
+          # Getting old version code
           current_version=$(grep -oP 'versionName "\K([^"]*)' android/app/build.gradle)
           # Get existing version code from build.gradle
           current_version_code=$(grep "versionCode" android/app/build.gradle | awk '{print $2}' | tr -d '\n')
-          # Get version name from meta.json file
+          # Getting version code from meta.json file
           version_name=$(cat ./public/meta.json | jq -r '.version')
 
-          # Extract version code from version name
+          # Extracting the version code from the version name
           version_code=$(echo "$version_name" | cut -d '.' -f 1)
           echo "Version code: $version_code"
 
           # Update build.gradle with new version code
-          echo "Updating build.gradle with new version code: $version_code"
+          echo "Update build.gradle with new version code: $version_code"
           sed -i "s/versionCode [0-9]\+/versionCode $version_code/g" android/app/build.gradle
           # Update version name in the project (adjust this command as per your project structure)
           sed -i "s/versionName \"$current_version\"/versionName \"$version_name\"/" android/app/build.gradle
@@ -67,7 +61,7 @@ jobs:
       - name: Commit and push changes
         run: |
           git config user.email "github-actions@github.com"
-          git config user.name "GitHub Actions"
+          git config user.name "Github Actions"
           git commit -am "Bump version code and change version name"
           git push origin ${{ github.ref_name }}
 
@@ -77,20 +71,22 @@ jobs:
         run: |
           yarn build
           yarn run build-android
-
       - name: Decode Keystore
         env:
           ENCODED_STRING: ${{ vars.KEYSTORE_BASE_64 }}
+          # RELEASE_KEYSTORE_PASSWORD: ${{ vars.RELEASE_KEYSTORE_PASSWORD }}
+          # RELEASE_KEYSTORE_ALIAS: ${{ vars.RELEASE_KEYSTORE_ALIAS }}
+          # RELEASE_KEY_PASSWORD: ${{ vars.RELEASE_KEY_PASSWORD }}
+
         run: |
           echo $ENCODED_STRING > keystore-b64.txt
           base64 -d keystore-b64.txt > keystore.jks
-
       - name: Build Release APK
-        env:
-          RELEASE_KEYSTORE_PASSWORD: ${{ vars.RELEASE_KEYSTORE_PASSWORD }}
-          RELEASE_KEYSTORE_ALIAS: ${{ vars.RELEASE_KEYSTORE_ALIAS }}
-          RELEASE_KEY_PASSWORD: ${{ vars.RELEASE_KEY_PASSWORD }}
-          REACT_APP_REDIRECT_URL: ${{ vars.REACT_APP_REDIRECT_URL }}
+        # env:
+        #   RELEASE_KEYSTORE_PASSWORD: ${{ vars.RELEASE_KEYSTORE_PASSWORD }}
+        #   RELEASE_KEYSTORE_ALIAS: ${{ vars.RELEASE_KEYSTORE_ALIAS }}
+        #   RELEASE_KEY_PASSWORD: ${{ vars.RELEASE_KEY_PASSWORD }}
+        #   REACT_APP_REDIRECT_URL: ${{ vars.REACT_APP_REDIRECT_URL }}
         run: |
           cd android && ./gradlew assembleRelease --stacktrace
 
@@ -99,22 +95,19 @@ jobs:
         with:
           name: app-release
           path: ./android/app/build/outputs/apk/release/*.apk
-
-      - name: Build Release APK Bundle
-        env:
-          RELEASE_KEYSTORE_PASSWORD: ${{ vars.RELEASE_KEYSTORE_PASSWORD }}
-          RELEASE_KEYSTORE_ALIAS: ${{ vars.RELEASE_KEYSTORE_ALIAS }}
-          RELEASE_KEY_PASSWORD: ${{ vars.RELEASE_KEY_PASSWORD }}
-          REACT_APP_REDIRECT_URL: ${{ vars.REACT_APP_REDIRECT_URL }}
+      - name: Build Release apk bundle
+        # env:
+        #   RELEASE_KEYSTORE_PASSWORD: ${{ vars.RELEASE_KEYSTORE_PASSWORD }}
+        #   RELEASE_KEYSTORE_ALIAS: ${{ vars.RELEASE_KEYSTORE_ALIAS }}
+        #   RELEASE_KEY_PASSWORD: ${{ vars.RELEASE_KEY_PASSWORD }}
+        #   REACT_APP_REDIRECT_URL: ${{ vars.REACT_APP_REDIRECT_URL }}
         run: |
-          cd android && ./gradlew bundleRelease --stacktrace
-
-      - name: Upload APK Bundle
+          cd android &&./gradlew bundleRelease --stacktrace
+      - name: Upload apk bundle
         uses: actions/upload-artifact@v3
         with:
           name: bundle-release
           path: ./android/app/build/outputs/bundle/release/*.aab
-
   new-tests:
     needs: build
     uses: ./.github/workflows/build.yml
