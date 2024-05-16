@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3s
         with:
           ref: ${{ github.head_ref }}
       - name: Setup java JDK
