@@ -37,7 +37,8 @@ jobs:
           ls
           content=`cat ./public/meta.json | jq -r '.version'`
           echo "Current version is \`$content\`"
-          echo ${{ vars.[github.ref_name  | tr '[:lower:]' '[:upper:]+"_REACT_APP_REDIRECT_URL"] }}
+          UPPERCASE_BRANCH_NAME=$(echo "${{ github.ref_name }}" | tr '[:lower:]' '[:upper:]')
+          echo "REACT_APP_REDIRECT_URL=${{ vars[UPPERCASE_BRANCH_NAME+'_REACT_APP_REDIRECT_URL'] }}"
       - name: Extract existing version code
         run: |
           # Getting old version code
