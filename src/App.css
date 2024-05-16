@@ -7,6 +7,12 @@
   gap: 8px;
 }
 
+.lol {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid black;
+  border-radius: 6px;
+}
 .app input {
   width: 100%;
   padding: 10px;
@@ -14,7 +20,7 @@
   border-radius: 6px;
 }
 
-ul{
+ul {
   display: flex;
   justify-items: start;
   flex-direction: column;
