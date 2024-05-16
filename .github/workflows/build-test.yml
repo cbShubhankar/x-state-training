@@ -40,7 +40,8 @@ jobs:
           UPPERCASE_BRANCH_NAME=$(echo "${{ github.ref_name }}" | tr '[:lower:]' '[:upper:]')
           VAR_NAME="${UPPERCASE_BRANCH_NAME}_REACT_APP_REDIRECT_URL"
           REDIRECT_URL="${!VAR_NAME}"
-          echo "REACT_APP_REDIRECT_URL=${REDIRECT_URL}"      - name: Extract existing version code
+          echo "REACT_APP_REDIRECT_URL=${REDIRECT_URL}"
+      - name: Extract existing version code
         run: |
           # Getting old version code
           current_version=$(grep -oP 'versionName "\K([^"]*)' android/app/build.gradle)
