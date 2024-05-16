@@ -37,8 +37,10 @@ jobs:
           ls
           content=`cat ./public/meta.json | jq -r '.version'`
           echo "Current version is \`$content\`"
-          echo ${{ vars.["${{ github.ref_name }}" | tr '[:lower:]' '[:upper:]+"_REACT_APP_REDIRECT_URL"] }}
-      - name: Extract existing version code
+          UPPERCASE_BRANCH_NAME=$(echo "${{ github.ref_name }}" | tr '[:lower:]' '[:upper:]')
+          VAR_NAME="${UPPERCASE_BRANCH_NAME}_REACT_APP_REDIRECT_URL"
+          REDIRECT_URL="${!VAR_NAME}"
+          echo "REACT_APP_REDIRECT_URL=${REDIRECT_URL}"      - name: Extract existing version code
         run: |
           # Getting old version code
           current_version=$(grep -oP 'versionName "\K([^"]*)' android/app/build.gradle)
