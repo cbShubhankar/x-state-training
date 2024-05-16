@@ -9,7 +9,7 @@ env:
   RELEASE_KEYSTORE_PASSWORD: ${{ vars.RELEASE_KEYSTORE_PASSWORD }}
   RELEASE_KEYSTORE_ALIAS: ${{ vars.RELEASE_KEYSTORE_ALIAS }}
   RELEASE_KEY_PASSWORD: ${{ vars.RELEASE_KEY_PASSWORD }}
-  REACT_APP_REDIRECT_URL: ${{ vars.MAIN_REACT_APP_REDIRECT_URL}}
+  REACT_APP_REDIRECT_URL: ${{vars[format( '{0}_REACT_APP_REDIRECT_URL', github.ref_name )]}}
 
 jobs:
   build:
@@ -40,7 +40,7 @@ jobs:
           aaa=MAIN_REACT_APP_REDIRECT_URL
           echo "${{vars[format( '{0}_REACT_APP_REDIRECT_URL', github.ref_name )]}}"
           echo "Current version is \`$content\`"
-          # echo "${{github.ref_name }}_MAIN_REACT_APP_REDIRECT_URL" | tr '[:lower:]' '[:upper:]'
+          # echo "${{github.ref_name }} | tr '[:lower:]' '[:upper:]'
       - name: Extract existing version code
         run: |
           # Getting old version code
