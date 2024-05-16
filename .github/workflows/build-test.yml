@@ -8,7 +8,7 @@ env:
   RELEASE_KEYSTORE_PASSWORD: ${{ vars.RELEASE_KEYSTORE_PASSWORD }}
   RELEASE_KEYSTORE_ALIAS: ${{ vars.RELEASE_KEYSTORE_ALIAS }}
   RELEASE_KEY_PASSWORD: ${{ vars.RELEASE_KEY_PASSWORD }}
-  REACT_APP_REDIRECT_URL: ${{ vars.MAIN_REACT_APP_REDIRECT_URL }}
+  REACT_APP_REDIRECT_URL: ${{ vars.["${{ github.ref_name }}" | tr '[:lower:]' '[:upper:]+"_REACT_APP_REDIRECT_URL"] }}
 
 jobs:
   build:
@@ -37,8 +37,7 @@ jobs:
           ls
           content=`cat ./public/meta.json | jq -r '.version'`
           echo "Current version is \`$content\`"
-          UPPERCASE_BRANCH_NAME=$(echo "${{ github.ref_name }}" | tr '[:lower:]' '[:upper:]')
-          echo "REACT_APP_REDIRECT_URL=${{ vars[UPPERCASE_BRANCH_NAME+'_REACT_APP_REDIRECT_URL'] }}"
+          echo "${{ github.ref_name }}" | tr '[:lower:]' '[:upper:]'
       - name: Extract existing version code
         run: |
           # Getting old version code
